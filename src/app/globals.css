@@ -2,20 +2,65 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@layer utilities {
+  ::-webkit-scrollbar {
+    width: 1px;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  ::-webkit-scrollbar-track {
+    background-color: inherit;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(43, 43, 43, 0.2);
+  }
+
+  ::selection {
+    background-color: var(hsl(--foreground));
+    color: var(hsl(--primary));
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  :root {
+    --background: #ffffff;
+    --foreground: #2b2b2b;
+
+    --card: #ffffff;
+    --card-foreground: #2b2b2b;
+
+    --popover: #ffffff;
+    --popover-foreground: #2b2b2b;
+
+    --primary: #3f63e7;
+    --primary-foreground: #f0f5ff;
+
+    --secondary: #f0f5ff;
+    --secondary-foreground: #3b3b3b;
+
+    --muted: #f0f5ff;
+    --muted-foreground: #79829e;
+
+    --accent: #f0f5ff;
+    --accent-foreground: #3b3b3b;
+
+    --destructive: #ff5a5a;
+    --destructive-foreground: #f0f5ff;
+
+    --border: rgba(43, 43, 43, 0.3);
+    --input: #d5e1ff;
+    --ring: #3f63e7;
+
+    --radius: 1rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
 }

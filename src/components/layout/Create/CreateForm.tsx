@@ -1,0 +1,179 @@
+'use client'
+
+import { ChangeEvent, useState } from 'react'
+import { useForm } from 'react-hook-form'
+
+import * as z from 'zod'
+
+import { useToast } from '@/hooks/use-toast'
+
+import { zodResolver } from '@hookform/resolvers/zod'
+import { BidSchema } from '@/schemas/bid'
+
+import { Button } from '@/components/default/Button'
+import { Form } from '@/components/default/Form'
+
+import { CreateInput } from '@/components/layout/Create/CreateInput'
+import { CreateTextarea } from '@/components/layout/Create/CreateTextarea'
+import { CreateTagInput } from '@/components/layout/Create/CreateTagInput'
+
+import { PulseLoader } from 'react-spinners'
+
+export const CreateForm = () => {
+  const { toast } = useToast()
+  const [isPending, setIsPending] = useState<boolean>(false)
+  const [tags, setTags] = useState<string[]>([])
+
+  const form = useForm<z.infer<typeof BidSchema>>({
+    resolver: zodResolver(BidSchema),
+    defaultValues: {
+      title: '',
+      description: '',
+      budgetFrom: 5000,
+      budgetTo: 10000,
+      deadlineDays: 3,
+    },
+  })
+
+  const onSubmit = async (values: z.infer<typeof BidSchema>) => {
+    const finalData = { ...values, tags }
+
+    setIsPending(true)
+
+    try {
+      const rules = JSON.stringify({
+        budget_from: finalData.budgetFrom,
+        budget_to: finalData.budgetTo,
+        deadline_days: finalData.deadlineDays,
+        qty_freelancers: 1,
+      })
+
+      const queryParams = new URLSearchParams({
+        token: '317ad1fc-e0a9-11ef-a978-0242ac120007',
+        title: finalData.title,
+        description: finalData.description,
+        tags: tags.join(','),
+        budget_from: finalData.budgetFrom.toString(),
+        budget_to: finalData.budgetTo.toString(),
+        deadline: finalData.deadlineDays.toString(),
+        reminds: '3',
+        all_auto_responses: 'false',
+        rules: rules,
+      }).toString()
+
+      const response = await fetch(
+        `https://deadlinetaskbot.productlove.ru/api/v1/tasks/client/newhardtask?${queryParams}`,
+        {
+          method: 'POST',
+        },
+      )
+
+      if (response.ok) {
+        toast({
+          title: 'Задача создана',
+          description: 'Код: 200',
+        })
+      } else {
+        toast({
+          title: 'Произошла ошибка',
+          description: 'Код: 401',
+        })
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setIsPending(false)
+    }
+  }
+
+  const onChange = (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    fieldName: string,
+  ) => {
+    const { value } = event.target
+    form.setValue(fieldName as keyof z.infer<typeof BidSchema>, value)
+  }
+
+  return (
+    <div className='p-12 w-[36rem] border border-border rounded-3xl shadow-2xl'>
+      <div className='mb-8'>
+        <h1 className='font-bold text-3xl'>Создать задачу</h1>
+        <p className='font-semibold text-lg opacity-50 mt-1'>
+          Что нужно сделать?
+        </p>
+      </div>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className='h-fit max-h-[30rem] overflow-y-scroll'>
+            <div className='mr-2'>
+              <div className='mb-8'>
+                <CreateInput
+                  control={form.control}
+                  name='title'
+                  label='Название'
+                  placeholder='Что нужно?'
+                  value={form.watch('title')}
+                  error={!!form.formState.errors.title}
+                  onChange={onChange}
+                />
+                <CreateTextarea
+                  control={form.control}
+                  name='description'
+                  label='Описание'
+                  placeholder='Подробнее о задаче'
+                  value={form.watch('description')}
+                  error={!!form.formState.errors.description}
+                  onChange={onChange}
+                />
+              </div>
+              <CreateTagInput tags={tags} setTags={setTags} />
+              <div className='mb-8'>
+                <h1 className='font-semibold text-xl'>Бюджет</h1>
+                <div className='flex gap-4 mt-4'>
+                  <CreateInput
+                    control={form.control}
+                    name='budgetFrom'
+                    label='От'
+                    placeholder='Мин. 5 000 ₽'
+                    type='number'
+                    value={form.watch('budgetFrom')}
+                    error={!!form.formState.errors.budgetFrom}
+                    onChange={onChange}
+                  />
+                  <CreateInput
+                    control={form.control}
+                    name='budgetTo'
+                    label='До'
+                    placeholder='Макс. 1 000 000 ₽'
+                    type='number'
+                    value={form.watch('budgetTo')}
+                    error={!!form.formState.errors.budgetTo}
+                    onChange={onChange}
+                  />
+                </div>
+              </div>
+              <CreateInput
+                control={form.control}
+                name='deadlineDays'
+                label='Дедлайн'
+                placeholder='В днях'
+                type='number'
+                value={form.watch('deadlineDays')}
+                error={!!form.formState.errors.deadlineDays}
+                onChange={onChange}
+              />
+            </div>
+          </div>
+          <Button
+            size='xl'
+            className='mt-8 w-[50%] text-lg transition-all duration-300 hover:-translate-y-[2px] active:scale-95'
+            type='submit'
+            disabled={!form.formState.isValid}
+          >
+            {isPending ? <PulseLoader color='white' /> : 'Создать задачу'}
+          </Button>
+        </form>
+      </Form>
+    </div>
+  )
+}
