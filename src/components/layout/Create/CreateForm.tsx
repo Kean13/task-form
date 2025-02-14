@@ -68,6 +68,8 @@ export const CreateForm = () => {
         },
       )
 
+      console.log(response)
+
       if (response.ok) {
         toast({
           title: 'Задача создана',
