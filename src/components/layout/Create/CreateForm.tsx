@@ -64,7 +64,7 @@ export const CreateForm = () => {
       const response = await fetch(
         `https://deadlinetaskbot.productlove.ru/api/v1/tasks/client/newhardtask?${queryParams}`,
         {
-          method: 'POST',
+          method: 'GET',
         },
       )
 
