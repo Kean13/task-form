@@ -166,7 +166,7 @@ export const CreateForm = () => {
           </div>
           <Button
             size='xl'
-            className='mt-8 w-[50%] text-lg transition-all duration-300 hover:-translate-y-[2px] active:scale-95'
+            className='mt-8 w-7/12 text-lg transition-all duration-300 hover:-translate-y-[2px] active:scale-95'
             type='submit'
             disabled={!form.formState.isValid}
           >
