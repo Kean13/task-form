@@ -13,17 +13,27 @@ interface TagInputProps {
 export const CreateTagInput = ({ tags, setTags }: TagInputProps) => {
   const [tagInput, setTagInput] = useState('')
 
-  const addTag = () => {
-    if (tagInput.trim() !== '') {
-      setTags([...tags, tagInput.trim()])
+  const addTag = (tag: string) => {
+    if (tag.trim() !== '') {
+      setTags([...tags, tag.trim()])
       setTagInput('')
+    }
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setTagInput(value)
+
+    if (value.includes(',')) {
+      const tag = value.replace(',', '').trim()
+      addTag(tag)
     }
   }
 
   const handleTagKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter' && tagInput.trim() !== '') {
       event.preventDefault()
-      addTag()
+      addTag(tagInput)
     }
   }
 
@@ -55,13 +65,18 @@ export const CreateTagInput = ({ tags, setTags }: TagInputProps) => {
       </div>
       <div className='flex gap-2 items-center'>
         <Input
-          placeholder='Укажите тэги к задаче'
+          placeholder='Укажите тэги к задаче (через запятую)'
           value={tagInput}
-          onChange={e => setTagInput(e.target.value)}
+          onChange={handleInputChange}
           onKeyDown={handleTagKeyPress}
           className='placeholder:text-foreground placeholder:opacity-30 p-0 pb-6 pt-10 rounded-none bg-transparent text-lg border-0 border-b-[0.5px] border-b-border flex-1'
         />
-        <Button onClick={addTag} disabled={tagInput.trim() === ''}>
+        <Button
+          size='icon'
+          className='duration-300 active:scale-95'
+          onClick={() => addTag(tagInput)}
+          disabled={tagInput.trim() === ''}
+        >
           <Plus className='w-6 h-6' />
         </Button>
       </div>
