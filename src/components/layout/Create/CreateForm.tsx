@@ -153,16 +153,18 @@ export const CreateForm = () => {
                     />
                   </div>
                 </div>
-                <CreateInput
-                  control={form.control}
-                  name='deadlineDays'
-                  label='Дедлайн'
-                  placeholder='В днях'
-                  type='number'
-                  value={form.watch('deadlineDays')}
-                  error={!!form.formState.errors.deadlineDays}
-                  onChange={onChange}
-                />
+                <div className='relative'>
+                  <CreateInput
+                    control={form.control}
+                    name='deadlineDays'
+                    label='Дедлайн (в днях)'
+                    placeholder='Сколько дней?'
+                    type='number'
+                    value={form.watch('deadlineDays')}
+                    error={!!form.formState.errors.deadlineDays}
+                    onChange={onChange}
+                  />
+                </div>
               </div>
             </div>
             <Button
