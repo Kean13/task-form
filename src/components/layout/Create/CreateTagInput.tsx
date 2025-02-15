@@ -2,7 +2,8 @@
 
 import { KeyboardEvent, useState } from 'react'
 import { Input } from '@/components/default/Input'
-import { Trash2 } from 'lucide-react'
+import { Trash2, Plus } from 'lucide-react' // Импортируем иконку Plus
+import { Button } from '@/components/default/Button' // Импортируем компонент Button
 
 interface TagInputProps {
   tags: string[]
@@ -12,14 +13,23 @@ interface TagInputProps {
 export const CreateTagInput = ({ tags, setTags }: TagInputProps) => {
   const [tagInput, setTagInput] = useState('')
 
-  const handleTagKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter' && tagInput.trim() !== '') {
-      event.preventDefault()
+  // Функция для добавления тега
+  const addTag = () => {
+    if (tagInput.trim() !== '') {
       setTags([...tags, tagInput.trim()])
-      setTagInput('')
+      setTagInput('') // Очищаем поле ввода
     }
   }
 
+  // Обработка нажатия Enter
+  const handleTagKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter' && tagInput.trim() !== '') {
+      event.preventDefault()
+      addTag()
+    }
+  }
+
+  // Удаление тега
   const removeTag = (tag: string) => {
     setTags(tags.filter(t => t !== tag))
   }
@@ -46,13 +56,23 @@ export const CreateTagInput = ({ tags, setTags }: TagInputProps) => {
           </span>
         ))}
       </div>
-      <Input
-        placeholder='Укажите тэги к задаче'
-        value={tagInput}
-        onChange={e => setTagInput(e.target.value)}
-        onKeyDown={handleTagKeyPress}
-        className='placeholder:text-foreground placeholder:opacity-30 p-0 pb-6 pt-10 rounded-none bg-transparent text-lg border-0 border-b-[0.5px] border-b-border'
-      />
+      <div className='flex gap-2 items-center mt-4'>
+        <Input
+          placeholder='Укажите тэги к задаче'
+          value={tagInput}
+          onChange={e => setTagInput(e.target.value)}
+          onKeyDown={handleTagKeyPress}
+          className='placeholder:text-foreground placeholder:opacity-30 p-0 pb-6 pt-10 rounded-none bg-transparent text-lg border-0 border-b-[0.5px] border-b-border flex-1'
+        />
+        <Button
+          size='icon'
+          onClick={addTag}
+          className='p-2 rounded-full hover:bg-primary/10 transition-colors'
+          disabled={tagInput.trim() === ''}
+        >
+          <Plus className='w-6 h-6' />
+        </Button>
+      </div>
     </div>
   )
 }

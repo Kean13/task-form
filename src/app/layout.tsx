@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='ru'>
-      <body className={`${inter.className} min-h-screen overflow-x-hidden`}>
+      <body className={`${inter.className}`}>
         {children}
         <Toaster />
       </body>
