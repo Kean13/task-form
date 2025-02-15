@@ -166,7 +166,7 @@ export const CreateForm = () => {
                     <CreateInput
                       control={form.control}
                       name='budgetFrom'
-                      label='От'
+                      label='Бюджет (от)'
                       placeholder='Мин. 5 000 ₽'
                       type='number'
                       value={form.watch('budgetFrom')}
@@ -176,7 +176,7 @@ export const CreateForm = () => {
                     <CreateInput
                       control={form.control}
                       name='budgetTo'
-                      label='До'
+                      label='Бюджет (до)'
                       placeholder='Макс. 1 000 000 ₽'
                       type='number'
                       value={form.watch('budgetTo')}
