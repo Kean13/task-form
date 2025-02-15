@@ -56,7 +56,7 @@ export const CreateTagInput = ({ tags, setTags }: TagInputProps) => {
           </span>
         ))}
       </div>
-      <div className='flex gap-2 items-center mt-4'>
+      <div className='flex gap-2 items-center'>
         <Input
           placeholder='Укажите тэги к задаче'
           value={tagInput}

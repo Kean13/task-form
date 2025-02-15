@@ -97,7 +97,7 @@ export const CreateForm = () => {
   return (
     <div className='max-sm:p-0 max-sm:px-6 max-sm:min-h-screen max-sm:overflow-auto max-sm:border-none max-sm:rounded-none max-sm:flex max-sm:items-center max-sm:justify-center p-8 w-full max-w-[36rem] border border-border rounded-3xl shadow-2xl'>
       <div className='max-h-[80vh] overflow-y-auto'>
-        <div className='mb-8 max-sm:mb-4'>
+        <div className='mb-6 max-sm:mb-2'>
           <h1 className='font-bold text-3xl max-sm:text-2xl'>Создать задачу</h1>
           <p className='font-semibold text-lg opacity-50 mt-1 max-sm:text-base'>
             Что нужно сделать?
