@@ -1,7 +1,9 @@
 'use client'
 
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+
+import { useSearchParams } from 'next/navigation'
 
 import * as z from 'zod'
 
@@ -21,19 +23,38 @@ import { PulseLoader } from 'react-spinners'
 
 export const CreateForm = () => {
   const { toast } = useToast()
+
   const [isPending, setIsPending] = useState<boolean>(false)
   const [tags, setTags] = useState<string[]>([])
+
+  const searchParams = useSearchParams()
 
   const form = useForm<z.infer<typeof BidSchema>>({
     resolver: zodResolver(BidSchema),
     defaultValues: {
+      token: searchParams.get('token') || '',
       title: '',
       description: '',
       budgetFrom: 5000,
       budgetTo: 10000,
       deadlineDays: 3,
+      qtyFreelancers: 1,
     },
   })
+
+  useEffect(() => {
+    const token = form.watch('token')
+    if (token) {
+      localStorage.setItem('token', token)
+    }
+  }, [form.watch('token')])
+
+  useEffect(() => {
+    const savedToken = localStorage.getItem('token')
+    if (savedToken) {
+      form.setValue('token', savedToken)
+    }
+  }, [form])
 
   const onSubmit = async (values: z.infer<typeof BidSchema>) => {
     const finalData = { ...values, tags }
@@ -45,11 +66,11 @@ export const CreateForm = () => {
         budget_from: finalData.budgetFrom,
         budget_to: finalData.budgetTo,
         deadline_days: finalData.deadlineDays,
-        qty_freelancers: 1,
+        qty_freelancers: finalData.qtyFreelancers,
       })
 
       const queryParams = new URLSearchParams({
-        token: '317ad1fc-e0a9-11ef-a978-0242ac120007',
+        token: finalData.token,
         title: finalData.title,
         description: finalData.description,
         tags: tags.join(','),
@@ -110,6 +131,17 @@ export const CreateForm = () => {
                 <div className='mb-8'>
                   <CreateInput
                     control={form.control}
+                    name='token'
+                    label='Токен'
+                    placeholder='Вставьте токен'
+                    value={form.watch('token')}
+                    error={!!form.formState.errors.token}
+                    onChange={onChange}
+                  />
+                </div>
+                <div className='mb-8'>
+                  <CreateInput
+                    control={form.control}
                     name='title'
                     label='Название'
                     placeholder='Что нужно?'
@@ -129,7 +161,7 @@ export const CreateForm = () => {
                 </div>
                 <CreateTagInput tags={tags} setTags={setTags} />
                 <div className='mb-8'>
-                  <h1 className='font-semibold text-xl'>Бюджет</h1>
+                  <h1 className='font-semibold text-xl'>Правила</h1>
                   <div className='flex gap-4 mt-4'>
                     <CreateInput
                       control={form.control}
@@ -153,15 +185,25 @@ export const CreateForm = () => {
                     />
                   </div>
                 </div>
-                <div className='relative'>
+                <CreateInput
+                  control={form.control}
+                  name='deadlineDays'
+                  label='Дедлайн (в днях)'
+                  placeholder='Сколько дней?'
+                  type='number'
+                  value={form.watch('deadlineDays')}
+                  error={!!form.formState.errors.deadlineDays}
+                  onChange={onChange}
+                />
+                <div className='mt-8'>
                   <CreateInput
                     control={form.control}
-                    name='deadlineDays'
-                    label='Дедлайн (в днях)'
-                    placeholder='Сколько дней?'
+                    name='qtyFreelancers'
+                    label='Фрилансеры'
+                    placeholder='Сколько человек?'
                     type='number'
-                    value={form.watch('deadlineDays')}
-                    error={!!form.formState.errors.deadlineDays}
+                    value={form.watch('qtyFreelancers')}
+                    error={!!form.formState.errors.qtyFreelancers}
                     onChange={onChange}
                   />
                 </div>
