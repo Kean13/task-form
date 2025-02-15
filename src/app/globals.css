@@ -12,7 +12,7 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: rgba(43, 43, 43, 0.2);
+    background-color: transparent;
   }
 
   ::selection {

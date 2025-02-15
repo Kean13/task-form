@@ -106,7 +106,7 @@ export const CreateForm = () => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className='max-sm:max-h-[40rem] h-fit max-h-[30rem] overflow-y-scroll'>
-              <div className='mr-2'>
+              <div>
                 <div className='mb-8'>
                   <CreateInput
                     control={form.control}
