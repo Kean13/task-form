@@ -1,6 +1,6 @@
 'use client'
 
-import { ChangeEvent, useState, useEffect } from 'react'
+import { ChangeEvent, useState, useEffect, Suspense } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { useSearchParams } from 'next/navigation'
@@ -21,7 +21,7 @@ import { CreateTagInput } from '@/components/layout/Create/CreateTagInput'
 
 import { PulseLoader } from 'react-spinners'
 
-export const CreateForm = () => {
+const CreateFormContent = () => {
   const { toast } = useToast()
 
   const [isPending, setIsPending] = useState<boolean>(false)
@@ -47,7 +47,7 @@ export const CreateForm = () => {
     if (token) {
       localStorage.setItem('token', token)
     }
-  }, [form.watch('token')])
+  }, [form])
 
   useEffect(() => {
     const savedToken = localStorage.getItem('token')
@@ -221,5 +221,13 @@ export const CreateForm = () => {
         </Form>
       </div>
     </div>
+  )
+}
+
+export const CreateForm = () => {
+  return (
+    <Suspense fallback={<div></div>}>
+      <CreateFormContent />
+    </Suspense>
   )
 }
