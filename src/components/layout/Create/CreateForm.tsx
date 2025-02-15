@@ -47,7 +47,7 @@ const CreateFormContent = () => {
     if (token) {
       localStorage.setItem('token', token)
     }
-  }, [form])
+  }, [form.watch('token')])
 
   useEffect(() => {
     const savedToken = localStorage.getItem('token')
